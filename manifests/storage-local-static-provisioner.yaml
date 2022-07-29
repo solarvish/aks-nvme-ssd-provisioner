@@ -48,7 +48,7 @@ data:
   setPVOwnerRef: "true"
   useNodeNameOnly: "true"
   storageClassMap: |
-    local-storage:
+    nvme-raid:
        hostDir: /pv-disks
        mountDir: /pv-disks
 ---
@@ -83,7 +83,7 @@ spec:
             privileged: true
           volumeMounts:
             - mountPath: /pv-disks
-              name: local-storage
+              name: nvme-raid
               mountPropagation: "Bidirectional"
       containers:
         - image: "quay.io/external_storage/local-volume-provisioner:v2.3.3"
@@ -115,7 +115,7 @@ spec:
             - mountPath: /dev
               name: provisioner-dev
             - mountPath: /pv-disks
-              name: local-storage
+              name: nvme-raid
               mountPropagation: "HostToContainer"
       volumes:
         - name: provisioner-config
@@ -124,14 +124,14 @@ spec:
         - name: provisioner-dev
           hostPath:
             path: /dev
-        - name: local-storage
+        - name: nvme-raid
           hostPath:
             path: /pv-disks
 ---
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: local-storage
+  name: nvme-raid
 provisioner: kubernetes.io/no-provisioner
 volumeBindingMode: WaitForFirstConsumer
 reclaimPolicy: Delete
